@@ -26,4 +26,6 @@ interface TransportInterface
 {
 
 	public function performHeadRequest($url, $timeout = null);
+
+	public function performGetRequest($url, $timeout = null);
 }

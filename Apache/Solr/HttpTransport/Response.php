@@ -94,16 +94,18 @@ class Response
 
 	private $responseBody;
 
+	private $effectiveUrl;
+
 	private $mimeType = 'text/plain';
 
 	private $encoding = 'UTF-8';
 
-	public function __construct($statusCode, $contentType, $responseBody)
+	public function __construct($statusCode, $contentType, $responseBody, $url)
 	{
 		$this->statusCode = $statusCode;
 		$this->statusMessage = self::getDefaultStatusMessage($statusCode);
 		$this->responseBody = (string) $responseBody;
-
+		$this->effectiveUrl = $url;
 
 		if (!empty($contentType)) {
 			$contentTypeParts = explode(';', $contentType, 2);
@@ -120,6 +122,11 @@ class Response
 				}
 			}
 		}
+	}
+
+	public function getEffectiveUrl()
+	{
+		return $this->effectiveUrl;
 	}
 
 	/**
