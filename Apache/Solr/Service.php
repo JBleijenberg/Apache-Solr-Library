@@ -23,6 +23,7 @@
 namespace Apache\Solr;
 
 use \Apache\Solr\HttpTransport\TransportInterface;
+use \Apache\Solr\Exception as SolrException;
 
 class Service
 {
@@ -201,5 +202,18 @@ class Service
 		$response = $httpTransport->performHeadRequest($this->getUrl(self::PING_SERVLET), $timeout);
 
 		return ($response->getStatusCode() == 200) ? microtime(true) - $start : false;
+	}
+
+	public function getThreads()
+	{
+		$httpTransport = $this->getHttpTransport();
+
+		$response = $httpTransport->performGetRequest($this->getUrl(self::THREADS_SERVLET));
+
+		if ($response->getStatusCode() !== 200) {
+			throw new SolrException($response->getStatusMessage());
+		}
+
+		return $response;
 	}
 }
