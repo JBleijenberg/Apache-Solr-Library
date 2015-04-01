@@ -146,10 +146,10 @@ class Service
 	 */
 	public function getUrl($type = self::PING_SERVLET, array $parameters = array())
 	{
-		$qsa = null;
+		$qsa = "?wt={$this->writer}";
 
 		if (!empty($parameters)) {
-			$qsa = '?' . http_build_query($parameters, null, $this->queryStringDelimiter);
+			$qsa = '&' . http_build_query($parameters, null, $this->queryStringDelimiter);
 		}
 
 		return "http://{$this->host}:{$this->port}/{$this->path}/{$type}{$qsa}";
