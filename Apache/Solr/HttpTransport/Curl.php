@@ -60,12 +60,32 @@ class Curl implements TransportInterface
 		curl_setopt($this->curl, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($this->curl, CURLOPT_NOBODY, true);
 
+		return $this->generateResponse();
+	}
+
+	public function performGetRequest($url, $timeout = null)
+	{
+		if ($timeout === null || $timeout < 0.0) {
+			$timeout = 2;
+		}
+
+		curl_setopt($this->curl, CURLOPT_URL, $url);
+		curl_setopt($this->curl, CURLOPT_TIMEOUT, $timeout);
+		curl_setopt($this->curl, CURLOPT_NOBODY, false);
+		curl_setopt($this->curl, CURLOPT_HTTPGET, false);
+
+		return $this->generateResponse();
+	}
+
+	protected function generateResponse()
+	{
 		$response = curl_exec($this->curl);
 
 		$statusCode = curl_getinfo($this->curl, CURLINFO_HTTP_CODE);
 		$contentType = curl_getinfo($this->curl, CURLINFO_CONTENT_TYPE);
+		$url = curl_getinfo($this->curl, CURLINFO_EFFECTIVE_URL);
 
-		return new Response($statusCode, $contentType, $response);
+		return new Response($statusCode, $contentType, $response, $url);
 	}
 
 	/**
